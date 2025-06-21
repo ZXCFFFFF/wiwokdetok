@@ -3,15 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZXCF.my.id - Berita Agregator Cerdas</title>
-    
-    <!-- Menghubungkan ke file CSS untuk styling -->
-    <link rel="stylesheet" href="style.css">
+    <title>ZXCF.my.id - Berita Agregator Cerdas & Terpercaya</title>
     
     <!-- Preconnect untuk mempercepat loading font dari Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Konfigurasi Awal & Variabel Warna --- */
+        :root {
+            --bg-primary: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --border-color: #e5e7eb;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --accent-color: #3b82f6;
+            --accent-hover: #60a5fa;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- Pengaturan Dasar & Tipografi --- */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .font-serif {
+            font-family: 'Lora', serif;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* --- Kustomisasi Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: #a8a8a8; border-radius: 4px; }
+        body.dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+
+        /* --- Header --- */
+        .site-header {
+            background-color: var(--bg-secondary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            transition: background-color 0.3s;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .site-title {
+            font-size: 1.875rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #1E3A8A 0%, #3B82F6 50%, #BFDBFE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        body.dark .site-title {
+             background: linear-gradient(90deg, #BFDBFE 0%, #60A5FA 50%, #3B82F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .icon-button:hover { background-color: rgba(0,0,0,0.05); }
+        body.dark .icon-button:hover { background-color: rgba(255,255,255,0.1); }
+        .icon-button svg { width: 1.5rem; height: 1.5rem; color: var(--text-secondary); }
+
+        /* --- Dropdown Bahasa --- */
+        .relative { position: relative; }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            margin-top: 0.5rem;
+            width: 10rem;
+            background-color: var(--bg-secondary);
+            border-radius: 0.375rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            padding: 0.25rem 0;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .dropdown-menu a:hover { background-color: rgba(0,0,0,0.05); }
+        body.dark .dropdown-menu a:hover { background-color: rgba(255,255,255,0.1); }
+
+        /* --- Konten Utama & Layout --- */
+        .content-wrapper { padding-top: 1.5rem; }
+        .main-layout { display: flex; flex-direction: column; gap: 2rem; }
+        @media (min-width: 1024px) { .main-layout { flex-direction: row; } }
+        .main-content { width: 100%; }
+        .sidebar { width: 100%; }
+        @media (min-width: 1024px) {
+            .main-content { width: 66.66%; }
+            .sidebar { width: 33.33%; }
+        }
+
+        /* --- Area Pencarian --- */
+        .search-area { margin-bottom: 2rem; max-width: 42rem; margin-left: auto; margin-right: auto; }
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background-color: var(--bg-secondary);
+            border-radius: 9999px;
+            box-shadow: var(--card-shadow);
+            transition: box-shadow 0.2s;
+        }
+        .search-input-wrapper:focus-within { box-shadow: 0 0 0 2px var(--accent-color); }
+        .search-input {
+            width: 100%;
+            background: transparent;
+            padding: 0.75rem 4.5rem 0.75rem 1.25rem;
+            font-size: 1rem;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+        }
+        .voice-search-button, .search-button { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: none; padding: 0.5rem; cursor: pointer; }
+        .voice-search-button { right: 3rem; }
+        .voice-search-button svg { width: 1.5rem; height: 1.5rem; color: var(--text-secondary); }
+        .search-button { right: 0.5rem; background-color: var(--accent-color); border-radius: 9999px; color: white; }
+        .search-button svg { width: 1.25rem; height: 1.25rem; }
+
+        /* --- Navigasi Topik --- */
+        .topic-nav { margin-bottom: 1.5rem; }
+        .topic-container { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
+        .topic-button {
+            white-space: nowrap;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .topic-button.active { background-color: #1e3a8a; color: white; border-color: #1e3a8a; }
+        body.dark .topic-button.active { background-color: #3b82f6; border-color: #3b82f6; }
+
+        /* --- Grid Berita --- */
+        .section-title { font-size: 1.875rem; font-family: 'Lora', serif; font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--accent-color); padding-left: 1rem; }
+        .news-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        @media (min-width: 640px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .news-card { background-color: var(--bg-secondary); border-radius: 0.5rem; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s; }
+        .news-card:hover { transform: translateY(-5px); }
+        .news-card-image-wrapper { position: relative; height: 12rem; overflow: hidden; }
+        .news-card-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .news-card:hover .news-card-image { transform: scale(1.1); }
+        .news-card-content { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; }
+        .news-card-category { background-color: rgba(59, 130, 246, 0.1); color: #1d4ed8; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.75rem; align-self: flex-start; }
+        body.dark .news-card-category { background-color: rgba(96, 165, 250, 0.2); color: #93c5fd; }
+        .news-card-title { font-family: 'Lora', serif; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.5rem; flex-grow: 1; }
+        .news-card-footer { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-secondary); display: flex; justify-content: space-between; }
+
+
+        /* --- Sidebar --- */
+        .sidebar .sidebar-widget { background-color: var(--bg-secondary); padding: 1rem; border-radius: 0.5rem; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; }
+        .sidebar .widget-title { font-family: 'Lora', serif; font-size: 1.25rem; font-weight: 700; border-bottom: 2px solid #dbeafe; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        body.dark .sidebar .widget-title { border-bottom-color: #1e3a8a; }
+        .sidebar .widget-content { display: flex; flex-direction: column; gap: 0.75rem; }
+        .sidebar .widget-content a, .sidebar .widget-content p { color: var(--text-primary); text-decoration: none; transition: color 0.2s; font-size: 0.875rem; }
+        .sidebar .widget-content a:hover { color: var(--accent-color); }
+        .clear-history-button { font-size: 0.875rem; color: #ef4444; text-decoration: underline; margin-top: 0.5rem; background: none; border: none; cursor: pointer; display: none; }
+        .clear-history-button:hover { color: #dc2626; }
+
+        /* --- Footer --- */
+        .site-footer { background-color: var(--bg-secondary); text-align: center; padding: 1.5rem; margin-top: 3rem; border-top: 1px solid var(--border-color); }
+        .site-footer p { color: var(--text-secondary); margin: 0; }
+        .site-footer .support-email { font-size: 0.875rem; margin-top: 0.5rem; }
+        .site-footer a { color: var(--accent-color); text-decoration: none; }
+        .site-footer a:hover { text-decoration: underline; }
+
+        /* --- Modal Artikel --- */
+        .modal-overlay { display: none; position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6); z-index: 50; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-content { background-color: var(--bg-primary); border-radius: 0.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); width: 100%; max-width: 56rem; max-height: 90vh; display: flex; flex-direction: column; animation: fadeIn 0.3s ease-out; }
+        .modal-header { padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .modal-title { font-family: 'Lora', serif; font-size: 1.5rem; font-weight: 700; margin: 0; padding-right: 2rem; }
+        .modal-header-controls { display: flex; align-items: center; gap: 0.5rem; }
+        .close-button { background: none; border: none; font-size: 2rem; line-height: 1; cursor: pointer; color: var(--text-secondary); }
+        .modal-body { flex-grow: 1; overflow-y: auto; }
+        .modal-image-container { width: 100%; height: 20rem; background-color: var(--border-color); }
+        .modal-image-container img { width: 100%; height: 100%; object-fit: cover; }
+        .modal-article-body { padding: 1.5rem; }
+        .article-byline { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem; }
+        .article-byline strong { font-weight: 600; }
+        .audio-player button { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background-color: var(--accent-color); color: white; border: none; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s; }
+        .audio-player button:hover { background-color: var(--accent-hover); }
+        .article-content { font-family: 'Lora', serif; font-size: 1.125rem; line-height: 1.7; margin-top: 1rem; }
+        .article-source { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.875rem; color: var(--text-secondary); }
+    </style>
 </head>
 <body>
 
@@ -30,8 +256,8 @@
                     <div id="lang-dropdown" class="dropdown-menu"></div>
                 </div>
                 <button id="theme-toggle" class="icon-button" title="Ganti Tema">
-                    <svg id="theme-toggle-dark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                    <svg id="theme-toggle-light-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 5.05A1 1 0 003.636 6.464l.707.707a1 1 0 001.414-1.414l-.707-.707zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zm7.536 2.464a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414l-.707-.707zM13.536 6.464a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707z"></path></svg>
+                    <svg id="theme-toggle-dark-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-toggle-light-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 5.05A1 1 0 003.636 6.464l.707.707a1 1 0 001.414-1.414l-.707-.707zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zm7.536 2.464a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414l-.707-.707zM13.536 6.464a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707z"></path></svg>
                 </button>
             </div>
         </div>
@@ -111,7 +337,372 @@
         </div>
     </div>
     
-    <!-- Menghubungkan ke file JavaScript untuk fungsionalitas -->
-    <script src="script.js"></script>
+    <script>
+        // Menunggu seluruh struktur HTML dimuat sebelum menjalankan skrip
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- KONFIGURASI & STATE GLOBAL ---
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=`;
+            
+            let state = {
+                currentTopic: "",
+                isLoading: false,
+                currentLanguage: 'id',
+                savedArticles: [],
+                speech: { utterance: null, isPlaying: false }
+            };
+            
+            const i18n = {
+                id: { name: "Indonesia", nativeName: "Indonesia", topics: ["Berita Utama", "Teknologi", "Ekonomi", "Sains", "Otomotif", "Gaya Hidup", "Hiburan", "Olahraga", "Politik", "Dunia"], langCode: "id-ID", history: "Riwayat Baca", clear_history: "Hapus Riwayat", save_article: "Simpan Artikel", saved_article: "Artikel Tersimpan", support: "Dukungan", source: "Sumber", reading_time: "Waktu Baca", by: "Oleh", listen_to_article: "Dengarkan", pause: "Jeda", continue: "Lanjutkan", voice_unsupported: "Fitur suara tidak didukung browser ini.", search_placeholder: "Cari berita atau gunakan suara...", searching: "Mencari...", history_tooltip: "Riwayat Baca", language_tooltip: "Ganti Bahasa", theme_tooltip: "Ganti Tema", trending_topics: "Topik Trending" },
+                en: { name: "English", nativeName: "English", topics: ["Top Stories", "Technology", "Economy", "Science", "Automotive", "Lifestyle", "Entertainment", "Sports", "Politics", "World"], langCode: "en-US", history: "Reading History", clear_history: "Clear History", save_article: "Save Article", saved_article: "Article Saved", support: "Support", source: "Source", reading_time: "Reading Time", by: "By", listen_to_article: "Listen", pause: "Pause", continue: "Continue", voice_unsupported: "Voice feature not supported by this browser.", search_placeholder: "Search news or use voice...", searching: "Searching...", history_tooltip: "Reading History", language_tooltip: "Change Language", theme_tooltip: "Change Theme", trending_topics: "Trending Topics" },
+                ja: { name: "Japanese", nativeName: "日本語", topics: ["トップニュース", "テクノロジー", "経済", "科学", "自動車", "ライフスタイル", "エンタメ", "スポーツ", "政治", "世界"], langCode: "ja-JP", history: "閲覧履歴", clear_history: "履歴を消去", save_article: "記事を保存", saved_article: "記事を保存しました", support: "サポート", source: "ソース", reading_time: "読書時間", by: "著", listen_to_article: "聞く", pause: "一時停止", continue: "続く", voice_unsupported: "このブラウザは音声機能に対応していません。", search_placeholder: "ニュースを検索または音声を使用...", searching: "検索中...", history_tooltip: "閲覧履歴", language_tooltip: "言語を変更", theme_tooltip: "テーマを変更", trending_topics: "人気のトピック" },
+                jv: { name: "Javanese", nativeName: "Basa Jawa", topics: ["Pawartos Utami", "Tèknologi", "Ékonomi", "Sains", "Otomotif", "Gaya Urip", "Hiburan", "Olahraga", "Pulitik", "Donya"], langCode: "jv-ID", history: "Riwayat Waosan", clear_history: "Busak Riwayat", save_article: "Simpen Artikel", saved_article: "Artikel Kasimpen", support: "Pitulungan", source: "Sumber", reading_time: "Wekdal Maos", by: "Dening", listen_to_article: "Mirengaken", pause: "Ngaso", continue: "Lajengaken", voice_unsupported: "Fitur swanten boten kasamekaken ing browser menika.", search_placeholder: "Golet pawartos utawi ngangge swanten...", searching: "Nggoleti...", history_tooltip: "Riwayat Waosan", language_tooltip: "Gantos Basa", theme_tooltip: "Gantos Tema", trending_topics: "Topik Populer" }
+            };
+            
+            // --- PEMILIHAN ELEMEN DOM ---
+            const elements = {
+                body: document.body,
+                themeToggle: document.getElementById('theme-toggle'),
+                themeToggleDarkIcon: document.getElementById('theme-toggle-dark-icon'),
+                themeToggleLightIcon: document.getElementById('theme-toggle-light-icon'),
+                topicContainer: document.getElementById('topicContainer'),
+                trendingTopicsContainer: document.getElementById('trending-topics-container'),
+                newsGrid: document.getElementById('newsGrid'),
+                loadingIndicator: document.getElementById('loadingIndicator'),
+                messageContainer: document.getElementById('messageContainer'),
+                currentTopicTitle: document.getElementById('currentTopicTitle'),
+                historyContainer: document.getElementById('history-container'),
+                clearHistoryBtn: document.getElementById('clear-history-btn'),
+                langMenu: document.getElementById('lang-menu'),
+                langToggleButton: document.getElementById('lang-toggle-button'),
+                langDropdown: document.getElementById('lang-dropdown'),
+                searchInput: document.getElementById('searchInput'),
+                searchBtn: document.getElementById('searchBtn'),
+                voiceSearchBtn: document.getElementById('voiceSearchBtn'),
+                articleModal: document.getElementById('articleModal'),
+                closeModalButton: document.getElementById('closeModalButton'),
+                modalTitle: document.getElementById('modalTitle'),
+                modalImageContainer: document.getElementById('modalImageContainer'),
+                modalByline: document.getElementById('modalByline'),
+                modalAudioPlayer: document.getElementById('modalAudioPlayer'),
+                modalContent: document.getElementById('modalContent'),
+                modalSource: document.getElementById('modalSource'),
+                saveArticleBtn: document.getElementById('saveArticleBtn'),
+            };
+            
+            // --- FUNGSI UTAMA ---
+            function init() {
+                initTheme();
+                initLanguage();
+                initHistory();
+                initEventListeners();
+                initSpeechRecognition();
+            }
+            
+            function initEventListeners() {
+                elements.langToggleButton.addEventListener('click', () => elements.langDropdown.style.display = elements.langDropdown.style.display === 'block' ? 'none' : 'block');
+                document.addEventListener('click', (e) => {
+                    if (!elements.langMenu.contains(e.target)) {
+                        elements.langDropdown.style.display = 'none';
+                    }
+                });
+                elements.closeModalButton.addEventListener('click', closeModal);
+                elements.articleModal.addEventListener('click', (e) => {
+                    if (e.target === elements.articleModal) closeModal();
+                });
+                elements.searchBtn.addEventListener('click', performSearch);
+                elements.searchInput.addEventListener('keydown', (e) => {
+                    if(e.key === 'Enter') performSearch();
+                });
+                elements.clearHistoryBtn.addEventListener('click', clearHistory);
+                window.addEventListener('scroll', () => {
+                    if (state.isLoading || elements.searchInput.value.trim() !== "") return;
+                    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+                        fetchAndDisplayNews(false);
+                    }
+                });
+            }
+
+            // --- TEMA (GELAP/TERANG) ---
+            function initTheme() {
+                const isDark = localStorage.getItem('theme') === 'dark';
+                elements.body.classList.toggle('dark', isDark);
+                elements.themeToggleLightIcon.style.display = isDark ? 'block' : 'none';
+                elements.themeToggleDarkIcon.style.display = isDark ? 'none' : 'block';
+                
+                elements.themeToggle.onclick = () => {
+                    const darkEnabled = elements.body.classList.toggle('dark');
+                    localStorage.setItem('theme', darkEnabled ? 'dark' : 'light');
+                    initTheme();
+                };
+            }
+
+            // --- BAHASA (INTERNASIONALISASI) ---
+            function initLanguage() {
+                const savedLang = localStorage.getItem('language') || 'id';
+                populateLangDropdown();
+                setLanguage(savedLang);
+            }
+
+            function populateLangDropdown() {
+                elements.langDropdown.innerHTML = '';
+                Object.entries(i18n).forEach(([code, lang]) => {
+                    const item = document.createElement('a');
+                    item.href = '#';
+                    item.textContent = lang.nativeName;
+                    item.onclick = (e) => {
+                        e.preventDefault();
+                        setLanguage(code);
+                        elements.langDropdown.style.display = 'none';
+                    };
+                    elements.langDropdown.appendChild(item);
+                });
+            }
+
+            function setLanguage(langCode) {
+                state.currentLanguage = langCode;
+                localStorage.setItem('language', langCode);
+                document.querySelectorAll('[data-translate-key]').forEach(el => {
+                    const key = el.dataset.translateKey;
+                    if(i18n[langCode][key]) el.textContent = i18n[langCode][key];
+                });
+                elements.searchInput.placeholder = i18n[langCode].search_placeholder;
+                initTopics();
+                changeTopic(i18n[langCode].topics[0]);
+                fetchAndDisplayTrendingTopics();
+            }
+            
+            // --- RIWAYAT (SIMPAN BERITA) ---
+            function initHistory() {
+                state.savedArticles = JSON.parse(localStorage.getItem('savedArticles')) || [];
+                renderHistory();
+            }
+
+            function renderHistory() {
+                elements.historyContainer.innerHTML = '';
+                if (state.savedArticles.length === 0) {
+                    elements.historyContainer.innerHTML = `<p class="italic-text">No saved articles.</p>`;
+                    elements.clearHistoryBtn.style.display = 'none';
+                    return;
+                }
+                elements.clearHistoryBtn.style.display = 'block';
+                state.savedArticles.forEach(article => {
+                    const item = document.createElement('a');
+                    item.href = '#';
+                    item.textContent = article.title;
+                    item.onclick = (e) => { e.preventDefault(); openArticleModal(article.title); };
+                    elements.historyContainer.prepend(item);
+                });
+            }
+
+            function saveArticle(title) {
+                if (!state.savedArticles.some(a => a.title === title)) {
+                    state.savedArticles.push({ title });
+                    localStorage.setItem('savedArticles', JSON.stringify(state.savedArticles));
+                    renderHistory();
+                }
+            }
+            
+            function clearHistory() {
+                state.savedArticles = [];
+                localStorage.removeItem('savedArticles');
+                renderHistory();
+            }
+
+            // --- TOPIK & NAVIGASI ---
+            function initTopics() {
+                const topics = i18n[state.currentLanguage].topics;
+                elements.topicContainer.innerHTML = '';
+                topics.forEach(topic => {
+                    const button = document.createElement('button');
+                    button.className = 'topic-button';
+                    button.textContent = topic;
+                    button.dataset.topic = topic;
+                    button.onclick = () => changeTopic(topic);
+                    elements.topicContainer.appendChild(button);
+                });
+            }
+
+            function changeTopic(topic) {
+                if (state.isLoading) return;
+                state.currentTopic = topic;
+                elements.currentTopicTitle.textContent = topic;
+                elements.searchInput.value = '';
+                document.querySelectorAll('.topic-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.topic === topic);
+                });
+                fetchAndDisplayNews(true);
+            }
+            
+            // --- PENCARIAN & SUARA ---
+            function performSearch() {
+                const query = elements.searchInput.value.trim();
+                if (query) {
+                    state.currentTopic = query;
+                    elements.currentTopicTitle.textContent = `${i18n[state.currentLanguage].searching} "${query}"`;
+                    fetchAndDisplayNews(true);
+                }
+            }
+            
+            function initSpeechRecognition() {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    elements.voiceSearchBtn.disabled = true;
+                    return;
+                }
+                const recognition = new SpeechRecognition();
+                recognition.lang = i18n[state.currentLanguage].langCode;
+                recognition.onresult = (event) => {
+                    elements.searchInput.value = event.results[0][0].transcript;
+                    performSearch();
+                };
+                elements.voiceSearchBtn.onclick = () => recognition.start();
+            }
+
+            // --- API & TAMPILAN BERITA ---
+            async function fetchApi(payload) {
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) throw new Error(`API Error ${response.status}`);
+                return response.json();
+            }
+
+            async function fetchAndDisplayNews(isNewTopic) {
+                if (state.isLoading) return;
+                state.isLoading = true;
+                if (isNewTopic) elements.newsGrid.innerHTML = '';
+                elements.loadingIndicator.textContent = 'Loading...';
+
+                const prompt = `Anda adalah editor agregator berita netral. Buat daftar 6 judul berita unik tentang "${state.currentTopic}". PENTING: Semua berita harus dari tahun 2025. Berita harus mencerminkan tren dari sumber seperti Kompas, Tempo, BBC, CNN, X, dan YouTube untuk wilayah berbahasa ${i18n[state.currentLanguage].name}. Respons HANYA sebagai array JSON dengan properti: "judul", "kategori", "tanggal" (format: "22 Juni 2025"), "waktu_baca" (format: "5 Menit").`;
+                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json" } };
+                try {
+                    const result = await fetchApi(payload);
+                    const articles = JSON.parse(result.candidates[0].content.parts[0].text);
+                    displayHeadlineCards(articles);
+                } catch (error) {
+                    elements.messageContainer.textContent = 'Gagal memuat berita.';
+                } finally {
+                    state.isLoading = false;
+                    elements.loadingIndicator.textContent = '';
+                }
+            }
+            
+            async function fetchAndDisplayTrendingTopics() {
+                const prompt = `Identifikasi 5 topik berita paling trending HARI INI (22 Juni 2025) di wilayah berbahasa ${i18n[state.currentLanguage].name}, berdasarkan agregasi dari X, YouTube, dan portal berita utama. Berikan respons HANYA sebagai array JSON berisi string topik.`;
+                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json" } };
+                try {
+                    const result = await fetchApi(payload);
+                    const topics = JSON.parse(result.candidates[0].content.parts[0].text);
+                    elements.trendingTopicsContainer.innerHTML = '';
+                    topics.forEach(topic => {
+                         const item = document.createElement('a');
+                         item.href = '#';
+                         item.textContent = topic;
+                         item.onclick = (e) => { e.preventDefault(); changeTopic(topic); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+                         elements.trendingTopicsContainer.appendChild(item);
+                    });
+                } catch (error) {
+                    elements.trendingTopicsContainer.innerHTML = `<p>Gagal memuat tren.</p>`;
+                }
+            }
+            
+            function displayHeadlineCards(articles) {
+                if (!articles || !Array.isArray(articles)) return;
+                articles.forEach(article => {
+                    const card = document.createElement('article');
+                    card.className = 'news-card';
+                    const imageSeed = article.judul.replace(/[^a-zA-Z0-9]/g, '');
+                    card.innerHTML = `<div class="news-card-image-wrapper"><img src="https://picsum.photos/seed/${imageSeed}/400/300" alt="" class="news-card-image" loading="lazy"></div><div class="news-card-content"><span class="news-card-category">${article.kategori}</span><h3 class="news-card-title">${article.judul}</h3><div class="news-card-footer"><span>${article.tanggal}</span><span>${article.waktu_baca}</span></div></div>`;
+                    card.onclick = () => openArticleModal(article.judul);
+                    elements.newsGrid.appendChild(card);
+                });
+            }
+
+            // --- MODAL & KONTEN LENGKAP ---
+            function openArticleModal(title) {
+                elements.articleModal.style.display = 'flex';
+                elements.modalTitle.textContent = title;
+                const imageSeed = title.replace(/[^a-zA-Z0-9]/g, '');
+                elements.modalImageContainer.innerHTML = `<img src="https://picsum.photos/seed/${imageSeed}/800/400" alt="" loading="lazy">`;
+                elements.modalContent.innerHTML = `<p>Loading article...</p>`;
+                elements.modalByline.innerHTML = '';
+                elements.saveArticleBtn.onclick = () => saveArticle(title);
+                fetchFullArticleContent(title);
+            }
+            
+            async function fetchFullArticleContent(title) {
+                const lang = i18n[state.currentLanguage];
+                const prompt = `Anda adalah jurnalis AI netral. Tulis artikel berita lengkap (min 5 paragraf) dalam bahasa ${lang.name} untuk judul: "${title}", pastikan isinya dari peristiwa tahun 2025. Format HANYA sebagai JSON dengan kunci: "konten_lengkap", "sumber_berita" (e.g., "Agregasi dari Kompas & Reuters"), "penulis" (e.g., "Tim Redaksi AI"), "tanggal_publikasi", dan "estimasi_baca".`;
+                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json" } };
+                try {
+                    const result = await fetchApi(payload);
+                    const article = JSON.parse(result.candidates[0].content.parts[0].text);
+                    elements.modalContent.innerHTML = article.konten_lengkap.split('\\n\\n').map(p => `<p>${p}</p>`).join('');
+                    elements.modalSource.innerHTML = `<strong>${lang.source}:</strong> ${article.sumber_berita}`;
+                    elements.modalByline.innerHTML = `<div><strong>${lang.by}:</strong> ${article.penulis}</div><span>&bull;</span><div>${article.tanggal_publikasi}</div><span>&bull;</span><div>${article.estimasi_baca}</div>`;
+                    setupAudioPlayer(article.konten_lengkap);
+                } catch (error) {
+                    elements.modalContent.innerHTML = `<p>Gagal memuat konten.</p>`;
+                }
+            }
+
+            function closeModal() {
+                stopSpeech();
+                elements.articleModal.style.display = 'none';
+            }
+
+            // --- TEXT-TO-SPEECH (TTS) ---
+            function setupAudioPlayer(text) {
+                if (!('speechSynthesis' in window)) return;
+                stopSpeech();
+                
+                const langCode = i18n[state.currentLanguage].langCode;
+                const voices = window.speechSynthesis.getVoices();
+                const voice = voices.find(v => v.lang === langCode) || voices.find(v => v.lang.startsWith(langCode.split('-')[0]));
+                
+                state.speech.utterance = new SpeechSynthesisUtterance(text);
+                if (voice) state.speech.utterance.voice = voice;
+                state.speech.utterance.lang = langCode;
+                state.speech.utterance.onend = () => {
+                    state.speech.isPlaying = false;
+                    updateAudioButton();
+                };
+
+                elements.modalAudioPlayer.innerHTML = `<button id="audioControlBtn"><span id="audioControlText"></span></button>`;
+                updateAudioButton();
+                document.getElementById('audioControlBtn').onclick = toggleSpeech;
+            }
+            
+            function toggleSpeech() {
+                if (state.speech.isPlaying) window.speechSynthesis.pause();
+                else {
+                    if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+                    else window.speechSynthesis.speak(state.speech.utterance);
+                }
+                state.speech.isPlaying = !state.speech.isPlaying;
+                updateAudioButton();
+            }
+            
+            function stopSpeech() {
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+                state.speech.isPlaying = false;
+            }
+
+            function updateAudioButton() {
+                const btnText = document.getElementById('audioControlText');
+                if(!btnText) return;
+                const lang = i18n[state.currentLanguage];
+                if(state.speech.isPlaying) btnText.textContent = lang.pause;
+                else if(window.speechSynthesis.paused) btnText.textContent = lang.continue;
+                else btnText.textContent = lang.listen_to_article;
+            }
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = () => {};
+            }
+            
+            // Jalankan inisialisasi aplikasi
+            init();
+
+        });
+    </script>
 </body>
 </html>
